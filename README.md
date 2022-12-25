@@ -1,2 +1,2 @@
 # board-springboot
-SpringBoot를 사용하여 게시판을 만들어 본다.
+SpringBoot를 사용하여 게시판 만들기
