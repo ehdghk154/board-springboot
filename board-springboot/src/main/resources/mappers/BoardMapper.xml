@@ -17,6 +17,7 @@
     , delete_time
 </sql>
 
+<!-- 게시글 생성 -->
 <insert id="insertBoard" parameterType="BoardDTO">
     insert into BOARD_TABLE (
         <include refid="boardColumns" />
@@ -35,4 +36,39 @@
     )
 </insert>
 
+<!-- 게시글 목록 -->
+<select id="selectBoardList" parameterType="BoardDTO" resultType="BoardDTO">
+    SELECT
+        <include refid="boardColumns" />
+    FROM
+        board_table
+    WHERE
+        delete_yn = 'N'
+    ORDER BY
+        notice_yn ASC,
+        idx DESC,
+        insert_time DESC
+</select>
+
+<!-- 게시글 개수 -->
+<select id="selectBoardTotalCount" parameterType="BoardDTO" resultType="int">
+    SELECT
+        COUNT(*)
+    FROM
+        board_table
+    WHERE
+        delete_yn = 'N'
+</select>
+
+<!-- 게시글 조회 -->
+<select id="selectBoardDetail" parameterType="long" resultType="BoardDTO">
+    SELECT
+        <include refid="boardColumns" />
+    FROM
+        board_table
+    WHERE
+        delete_yn = 'N'
+    AND
+        idx = #{idx}
+</select>
 </mapper>

@@ -1,5 +1,8 @@
 package com.myboard.service;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +24,28 @@ public class BoardServiceImpl implements BoardService {
         
         // 정상 작동되면 true, 아니면 false
         return (queryResult == 1) ? true : false;
+    }
+    
+    // 게시글 목록
+    @Override
+    public List<BoardDTO> getBoardList() {
+        List<BoardDTO> boardList = Collections.emptyList();
+        
+        // 게시글 총 개수 저장
+        int boardTotalCount = boardMapper.selectBoardTotalCount();
+        
+        // 게시글이 있을 경우, 게시글 목록 가져오는 Mapper 실행
+        if(boardTotalCount > 0) {
+            boardList = boardMapper.selectBoardList();
+        }
+        
+        return boardList;
+    }
+    
+    // 게시글 조회
+    @Override
+    public BoardDTO getBoardDetail(Long idx) {
+        
+        return boardMapper.selectBoardDetail(idx);
     }
 }

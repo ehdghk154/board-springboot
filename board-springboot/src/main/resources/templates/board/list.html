@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+ layout:decorate="~{board/layout/basic}">
+
+<!-- header.html 안에 있는 title 사용 -->
+<th:block layout:fragment="title">
+    <title>This page is a list page</title>
+</th:block>
+
+<!-- body.html 안에 있는 search 영역에 내용 추가 -->
+<th:block layout:fragment="search">
+    <form action="#" id="searchform-header" class="searchform js__toggle active pull-right">
+        <input type="search" placeholder="검색..." class="input-search">
+        <button class="mdi mdi-magnify button-search" type="submit">
+            <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+    </form>
+</th:block>
+
+<!-- body.html 안에 있는 content 영역에 내용 추가 -->
+<!-- th:href : <a>태그의 href와 동일, Context Path를 포함 -->
+<th:block layout:fragment="content">
+    <div class="table-responsive clearfix">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>등록일</th>
+                    <th>조회 수</th>
+                </tr>
+            </thead>
+            <!-- 게시글 목록이 출력되는 영역 -->
+            <!-- th:if : 일반 if문과 같음 -->
+            <!-- th:unless : else문. if문의 내용을 똑같이 적어줘야 함. -->
+            <tbody>
+                <tr th:if="${not #lists.isEmpty( boardList )}" th:each="row : ${boardList}">
+                    <!-- #strings.equals 함수로 공지여부가 'Y'라면 "공지" 출력, 아니라면 게시물 번호 출력-->
+                    <td scope="row" th:text="${#strings.equals( row.noticeYN, 'Y' ) ? '공지' : row.idx}"></td>
+                    <td class="text-left">
+                        <!-- 일반적인 GET과 타임리프 GET 차이 -->
+                        <!-- 일반적인 GET : /board/view.do?idx=${idx}&page=${page}-->
+                        <!-- 타임리프 GET : /board/view.do(idx=${idx}, page=${page})-->
+                        <a th:href="@{/board/view.do( idx=${row.idx} )}" th:text="${row.title}"></a>
+                    </td>
+                    <td th:text="${row.writer}"></td>
+                    <!-- #temporals.format : 원하는 날짜 형태로 포맷할 수 있다. -->
+                    <td th:text="${#temporals.format( row.insertTime, 'yyyy-MM-dd' )}"></td>
+                    <td th:text="${row.viewCnt}"></td>
+                </tr>
+                <tr th:unless="${not #lists.isEmpty( boardList )}">
+                    <td colspan="5">조회된 결과가 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="btn_wrap text-right">
+            <a th:href="@{/board/write.do}" class="btn btn-primary waves-effect waves-light">글쓰기</a>
+        </div>
+        
+        <!-- body.html 안에 있는 paging 사용 -->
+        <th:block layout:fragment="paging">
+            <nav aria-label="Page navigation" class="text-center">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="이전">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li>
+                        <a href="#" aria-label="다음">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </th:block>
+    </div>
+</th:block>
+</html>
