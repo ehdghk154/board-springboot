@@ -19,16 +19,32 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
     
-    // 게시글 작성 GET
+    // 게시글 등록 GET
     @GetMapping(value = "/board/write.do")
     public String openBoardWrite(@RequestParam(value="idx", required=false) Long idx, Model model) {
         
-        model.addAttribute("board", new BoardDTO());
+        // idx가 없으면 게시물이 존재하지 않으므로,
+        // 새로운 BoardDTO를 모델에 담아 리턴
+        if(idx == null) {
+            model.addAttribute("board", new BoardDTO());
+        }
+        // idx가 있으면 게시물이 존재하므로,
+        // 게시물을 조회하고 그 정보를 모델에 담아 리턴
+        else {
+            BoardDTO board = boardService.getBoardDetail(idx);
+            
+            // 아무 정보도 조회되지 않았다면, list로 리다이렉트
+            if(board == null) {
+                return "redirect:/board/list.do";
+            }
+            
+            model.addAttribute("board", board);
+        }
         
         return "board/write";
     }
     
-    // 게시글 작성 POST
+    // 게시글 등록 POST
     @PostMapping(value = "/board/register.do")
     public String registerBoard(final BoardDTO params) {
         try {

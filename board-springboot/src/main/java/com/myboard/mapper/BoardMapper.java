@@ -19,4 +19,7 @@ public interface BoardMapper {
     
     // 게시글 조회
     public BoardDTO selectBoardDetail(Long idx);
+    
+    // 게시글 수정
+    public int updateBoard(BoardDTO params);
 }

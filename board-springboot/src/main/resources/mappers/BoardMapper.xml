@@ -71,4 +71,19 @@
     AND
         idx = #{idx}
 </select>
+
+<!-- 게시글 수정 -->
+<update id="updateBoard" parameterType="BoardDTO">
+    UPDATE
+        board_table
+    SET
+          update_time = sysdate
+        , title = #{title}
+        , content = #{content}
+        , writer = #{writer}
+        , notice_yn = NVL(#{noticeYN, jdbcType=VARCHAR}, 'N')
+        , secret_yn = NVL(#{secretYN, jdbcType=VARCHAR}, 'N')
+    WHERE
+        idx = #{idx}
+</update>
 </mapper>

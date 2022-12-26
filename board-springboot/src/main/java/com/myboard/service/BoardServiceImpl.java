@@ -19,8 +19,16 @@ public class BoardServiceImpl implements BoardService {
     public boolean registerBoard(BoardDTO params) {
         int queryResult = 0;
         
-        // 쿼리가 정상 작동하면 1을 반환
-        queryResult = boardMapper.insertBoard(params);
+        // idx가 없다는 건, 아직 생성되지 않는 게시물이기에,
+        // 게시물 생성 쿼리 실행
+        if(params.getIdx() == null) {
+            // 쿼리가 정상 작동하면 1을 반환
+            queryResult = boardMapper.insertBoard(params);
+        }
+        // idx가 있으면 게시물이 존재하므로, 게시물 수정 쿼리 실행
+        else {
+            queryResult = boardMapper.updateBoard(params);
+        }
         
         // 정상 작동되면 true, 아니면 false
         return (queryResult == 1) ? true : false;
