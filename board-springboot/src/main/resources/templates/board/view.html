@@ -49,7 +49,8 @@ layout:decorate="~{board/layout/basic}">
         <div class="btn_wrap text-center">
             <a th:href="@{/board/list.do}" class="btn btn-default waves-effect waves-light">뒤로가기</a>
             <a th:href="@{/board/write.do( idx=${board.idx} )}" class="btn btn-primary waves-effect waves-light">수정하기</a>
-            <button type="button" class="btn btn-danger waves-effect waves-light" th:onclick="deleteBoard([[ ${board.idx} ]])">삭제하기</button>
+            <a href="javascript:void(0);" th:data-uri="@{|/board/delete.do?idx=${board.idx}|}"
+             class="delete btn btn-danger waves-effect waves-light">삭제하기</a>
         </div>
     </div>
     <!-- /.card-content -->
@@ -96,5 +97,19 @@ layout:decorate="~{board/layout/basic}">
         <!-- /.card=content -->
     </div>
     <!-- /.box-content -->
+</th:block>
+<!-- body.html 안에 script 영역 -->
+<th:block layout:fragment="script">
+    <!-- <script> 태그에 th:inline 속성을 javascript로 선언해야 자바스크립트를 사용할 수 있다. -->
+    <script th:inline="javascript">
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function(element) {
+            element.addEventListener('click', function() {
+                if (confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                }
+            });
+        });
+    </script>
 </th:block>
 </html>

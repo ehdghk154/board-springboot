@@ -13,4 +13,7 @@ public interface BoardService {
     
     // 게시글 조회
     public BoardDTO getBoardDetail(Long idx);
+    
+    // 게시글 삭제
+    public boolean deleteBoard(Long idx);
 }

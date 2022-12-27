@@ -19,6 +19,11 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
     
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/board/list.do";
+    }
+    
     // 게시글 등록 GET
     @GetMapping(value = "/board/write.do")
     public String openBoardWrite(@RequestParam(value="idx", required=false) Long idx, Model model) {
@@ -90,5 +95,34 @@ public class BoardController {
         model.addAttribute("board", board);
         
         return "board/view";
+    }
+    
+    // 게시글 삭제
+    @GetMapping(value = "/board/delete.do")
+    public String deleteBoard(@RequestParam(value="idx", required=false) Long idx) {
+        System.out.println("/board/delete.do 접근. idx = " + idx);
+        
+        //올바르지 않은 접글일 경우
+        if(idx == null) {
+            // TODO : 올바르지 않은 접근이라는 메세지 전달
+            return "redirect:/board/list.do";
+        }
+        
+        try {
+            System.out.println("try 접근. idx = " + idx);
+            boolean isDeleted = boardService.deleteBoard(idx);
+            System.out.println("deleteBoard 실행 후. isDeleted = " + isDeleted);
+            
+            // false일 경우 이미 게시글이 삭제된 상태
+            if(isDeleted == false) {
+                // TODO : 게시글 삭제에 실패했다는 메세지 전달
+            }
+        } catch(DataAccessException e) {
+            // TODO : 데이터베이스 처리 과정에 문제 발생 메세지 전달
+        } catch(Exception e) {
+            // TODO : 시스템에 문제가 발생했다는 메세지 전달
+        }
+        
+        return "redirect:/board/list.do";
     }
 }

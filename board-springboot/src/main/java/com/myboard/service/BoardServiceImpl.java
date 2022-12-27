@@ -56,4 +56,20 @@ public class BoardServiceImpl implements BoardService {
         
         return boardMapper.selectBoardDetail(idx);
     }
+    
+    // 게시글 삭제
+    @Override
+    public boolean deleteBoard(Long idx) {
+        int queryResult = 0;
+        
+        BoardDTO board = boardMapper.selectBoardDetail(idx);
+        
+        // 조회한 게시글이 null이 아니고, 삭제된 상태가 아닐 때 실행
+        if(board != null && "N".equals(board.getDeleteYN())) {
+            queryResult = boardMapper.deleteBoard(idx);
+        }
+        
+        // 1이면 정상적으로 쿼리 실행되었다는 뜻으로 true 반환
+        return(queryResult == 1) ? true : false;
+    }
 }

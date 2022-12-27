@@ -86,4 +86,15 @@
     WHERE
         idx = #{idx}
 </update>
+
+<!-- 게시글 삭제 -->
+<update id="deleteBoard" parameterType="long">
+    UPDATE
+        board_table
+    SET
+          delete_yn = 'Y'
+        , delete_time = sysdate
+    WHERE
+        idx = #{idx}
+</update>
 </mapper>
