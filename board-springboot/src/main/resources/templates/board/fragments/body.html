@@ -2,12 +2,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <body th:fragment="main-body">
-    <div class="fixed-navbar">
-        <div class="pull-left">
-            <h1 class="page-title">Board</h1>
-        </div>
-    </div>
-    <!-- /.fixed-navbar -->
+    <!-- navbar -->
+    <nav th:replace="~{board/layout/navbar :: navbarFragment}"></nav>
 
     <div id="wrapper">
         <div class="main-content">

@@ -1391,3 +1391,9 @@ textarea.form-control {
 .form-group .form-control.file_list button {width: 20px; height: 20px; margin-left: 3px; padding: 0; line-height: 20px;}
 
 .notice-list button {position: absolute; right: 15px; bottom: 5px;}
+
+.form-group {transform: translateX(+8%);}
+.card-center {margin-left:3rem; margin-right:3rem;}
+.navbar {background-color:rgba(13, 110, 253, 1);}
+.navbar-brand {font-size:1.5rem; color:rgba(255, 255, 255, 0.9); margin-left:0.5rem;}
+.nav-link {color:rgba(255, 255, 255, 0.9); margin-top:0.4rem;}

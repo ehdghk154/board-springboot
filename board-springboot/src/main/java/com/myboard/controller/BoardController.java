@@ -2,30 +2,28 @@ package com.myboard.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.myboard.domain.BoardDTO;
 import com.myboard.service.BoardService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequestMapping("/board")
+@RequiredArgsConstructor
 @Controller
 public class BoardController {
     
-    @Autowired
-    private BoardService boardService;
-    
-    @GetMapping("/")
-    public String root() {
-        return "redirect:/board/list.do";
-    }
+    private final BoardService boardService;
     
     // 게시글 등록 GET
-    @GetMapping(value = "/board/write.do")
+    @GetMapping(value = "/write.do")
     public String openBoardWrite(@RequestParam(value="idx", required=false) Long idx, Model model) {
         
         // idx가 없으면 게시물이 존재하지 않으므로,
@@ -50,7 +48,7 @@ public class BoardController {
     }
     
     // 게시글 등록 POST
-    @PostMapping(value = "/board/register.do")
+    @PostMapping(value = "/register.do")
     public String registerBoard(final BoardDTO params) {
         try {
             boolean isRegistered = boardService.registerBoard(params);
@@ -67,7 +65,7 @@ public class BoardController {
     }
     
     // 게시글 목록
-    @GetMapping(value = "/board/list.do")
+    @GetMapping(value = "/list.do")
     public String openBoardList(Model model) {
         List<BoardDTO> boardList = boardService.getBoardList();
         model.addAttribute("boardList", boardList);
@@ -76,7 +74,7 @@ public class BoardController {
     }
     
     // 게시글 조회
-    @GetMapping(value = "/board/view.do")
+    @GetMapping(value = "/view.do")
     public String openBoardDetail(@RequestParam(value="idx", required=false) Long idx, Model model) {
         // 올바르지 않은 접근
         if(idx == null) {
@@ -98,7 +96,7 @@ public class BoardController {
     }
     
     // 게시글 삭제
-    @GetMapping(value = "/board/delete.do")
+    @GetMapping(value = "/delete.do")
     public String deleteBoard(@RequestParam(value="idx", required=false) Long idx) {
         System.out.println("/board/delete.do 접근. idx = " + idx);
         

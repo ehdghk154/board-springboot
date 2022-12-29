@@ -60,7 +60,7 @@
         delete_yn = 'N'
 </select>
 
-<!-- 게시글 조회 -->
+<!-- 게시글 상세 조회 -->
 <select id="selectBoardDetail" parameterType="long" resultType="BoardDTO">
     SELECT
         <include refid="boardColumns" />

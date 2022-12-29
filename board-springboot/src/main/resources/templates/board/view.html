@@ -9,7 +9,7 @@ layout:decorate="~{board/layout/basic}">
 <!-- content -->
 <th:block layout:fragment="content">
     <div class="card-content">
-        <form class="form-horizontal form-view" th:object="${board}">
+        <form class="form-horizontal form-vertical form-view" th:object="${board}">
             <div class="form-group">
                 <label for="inp-type-1" class="col-sm-2 control-label">제목</label>
                 <div class="col-sm-10">
@@ -58,7 +58,7 @@ layout:decorate="~{board/layout/basic}">
 
 <th:block layout:fragment="add-content">
     <div class="box-content">
-        <div class="card-content">
+        <div class="card-content card-center">
             <div class="clearfix">
                 <h4 class="box-title pull-left">Comment</h4>
                 <!-- /.box-title -->
@@ -68,7 +68,7 @@ layout:decorate="~{board/layout/basic}">
                 <div class="input-group margin-bottom-20">
                     <input type="email" class="form-control" placeholder="Comment...">
                     <div class="input-group-btn">
-                        <button type="button" class="btn waves-effect waves-light">
+                        <button type="submit" class="btn waves-effect waves-light">
                             <i class="fa fa-commenting" aria-hidden="true"></i>
                         </button>
                     </div>
