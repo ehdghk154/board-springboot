@@ -4,8 +4,7 @@
 <mapper namespace="com.myboard.mapper.BoardMapper">
 
 <sql id="boardColumns">
-      idx
-    , title
+      title
     , content
     , writer
     , view_cnt
@@ -15,49 +14,17 @@
     , insert_time
     , update_time
     , delete_time
+    , comment_list
 </sql>
-
-<!-- 게시글 생성 -->
-<insert id="insertBoard" parameterType="BoardDTO">
-    insert into BOARD_TABLE (
-        <include refid="boardColumns" />
-    ) values (
-         BOARD_TABLE_SEQ.NEXTVAL
-       , #{title}
-       , #{content}
-       , #{writer}
-       , 0
-       , NVL(#{noticeYN, jdbcType=VARCHAR}, 'N')
-       , NVL(#{secretYN, jdbcType=VARCHAR}, 'N')
-       , 'N'
-       , sysdate
-       , null
-       , null
-    )
-</insert>
-
-<!-- 게시글 목록 -->
-<select id="selectBoardList" parameterType="BoardDTO" resultType="BoardDTO">
-    SELECT
-        <include refid="boardColumns" />
-    FROM
-        board_table
-    WHERE
-        delete_yn = 'N'
-    ORDER BY
-        notice_yn ASC,
-        idx DESC,
-        insert_time DESC
-</select>
 
 <!-- 게시글 개수 -->
 <select id="selectBoardTotalCount" parameterType="BoardDTO" resultType="int">
     SELECT
         COUNT(*)
     FROM
-        board_table
+        board
     WHERE
-        delete_yn = 'N'
+        delete_yn = false
 </select>
 
 <!-- 게시글 상세 조회 -->
@@ -65,9 +32,9 @@
     SELECT
         <include refid="boardColumns" />
     FROM
-        board_table
+        board
     WHERE
-        delete_yn = 'N'
+        delete_yn = false
     AND
         idx = #{idx}
 </select>
@@ -75,14 +42,14 @@
 <!-- 게시글 수정 -->
 <update id="updateBoard" parameterType="BoardDTO">
     UPDATE
-        board_table
+        board
     SET
           update_time = sysdate
         , title = #{title}
         , content = #{content}
         , writer = #{writer}
-        , notice_yn = NVL(#{noticeYN, jdbcType=VARCHAR}, 'N')
-        , secret_yn = NVL(#{secretYN, jdbcType=VARCHAR}, 'N')
+        , notice_yn = NVL(#{noticeYN}, false)
+        , secret_yn = NVL(#{secretYN}, false)
     WHERE
         idx = #{idx}
 </update>
@@ -90,9 +57,9 @@
 <!-- 게시글 삭제 -->
 <update id="deleteBoard" parameterType="long">
     UPDATE
-        board_table
+        board
     SET
-          delete_yn = 'Y'
+          delete_yn = true
         , delete_time = sysdate
     WHERE
         idx = #{idx}

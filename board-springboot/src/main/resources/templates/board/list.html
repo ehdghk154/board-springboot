@@ -61,7 +61,8 @@
         
         <!-- body.html 안에 있는 paging 사용 -->
         <th:block layout:fragment="paging">
-            <nav aria-label="Page navigation" class="text-center">
+            <nav th:object="${pageMaker}" aria-label="Page navigation" class="text-center">
+                <a class="changePage" th:if="*{prev}" th:href="*{startPage - 1}">&lt;</a>
                 <ul class="pagination">
                     <li>
                         <a href="#" aria-label="이전">

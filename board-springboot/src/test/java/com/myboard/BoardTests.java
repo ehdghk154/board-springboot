@@ -4,23 +4,35 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.myboard.domain.Board;
 import com.myboard.domain.BoardDTO;
-import com.myboard.service.BoardService;
+import com.myboard.repository.BoardRepository;
 
 @SpringBootTest
 class BoardTests {
 
     @Autowired
-    private BoardService boardService;
+    private BoardRepository boardRepository;
     
     @Test
     void test() {
-        BoardDTO board = new BoardDTO();
-        for(int i = 24; i <= 50; i++) {
-            board.setTitle(String.format("[%d]번째 게시글입니다.", i));
-            board.setWriter(String.format("테스트이름[%d]", i));
-            board.setContent(String.format("게시글등록테스트[:%d]", i));
-            boardService.registerBoard(board);
+        BoardDTO dto = new BoardDTO();
+        for(int i = 5; i <= 6; i++) {
+            dto.setTitle(String.format("[%d]번째 게시글입니다.", i));
+            dto.setWriter(String.format("테스트이름[%d]", i));
+            dto.setContent(String.format("게시글등록테스트[:%d]", i));
+            dto.setNoticeYN(true);
+            dto.setSecretYN(false);
+            dto.setDeleteYN(true);
+            
+            this.boardRepository.save(Board.builder()
+                                    .title(dto.getTitle())
+                                    .content(dto.getContent())
+                                    .writer(dto.getWriter())
+                                    .noticeYN(dto.getNoticeYN())
+                                    .secretYN(dto.getSecretYN())
+                                    .deleteYN(dto.getDeleteYN())
+                                    .build());
         }
     }
 

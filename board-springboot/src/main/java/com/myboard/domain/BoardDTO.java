@@ -1,6 +1,7 @@
 package com.myboard.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,10 +16,11 @@ public class BoardDTO {
     private String content;     // 내용
     private String writer;      // 작성자
     private int viewCnt;        // 조회수
-    private String noticeYN;    // 공지 여부
-    private String secretYN;    // 비밀 여부
-    private String deleteYN;    // 삭제 여부
+    private Boolean noticeYN;    // 공지 여부
+    private Boolean secretYN;    // 비밀 여부
+    private Boolean deleteYN;    // 삭제 여부
     private LocalDateTime insertTime; // 등록일
     private LocalDateTime updateTime; // 수정일
     private LocalDateTime deleteTime; // 삭제일
+    private List<Comment> commentList; // 댓글목록
 }
