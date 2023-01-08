@@ -37,7 +37,7 @@
             <tbody>
                 <tr th:if="${not #lists.isEmpty( boardList )}" th:each="row : ${boardList}">
                     <!-- #strings.equals 함수로 공지여부가 'Y'라면 "공지" 출력, 아니라면 게시물 번호 출력-->
-                    <td scope="row" th:text="${#strings.equals( row.noticeYN, 'Y' ) ? '공지' : row.idx}"></td>
+                    <td scope="row" th:text="${row.noticeYN ? '공지' : row.idx}"></td>
                     <td class="text-left">
                         <!-- 일반적인 GET과 타임리프 GET 차이 -->
                         <!-- 일반적인 GET : /board/view.do?idx=${idx}&page=${page}-->
@@ -61,26 +61,23 @@
         
         <!-- body.html 안에 있는 paging 사용 -->
         <th:block layout:fragment="paging">
-            <nav th:object="${pageMaker}" aria-label="Page navigation" class="text-center">
-                <a class="changePage" th:if="*{prev}" th:href="*{startPage - 1}">&lt;</a>
-                <ul class="pagination">
-                    <li>
-                        <a href="#" aria-label="이전">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li>
-                        <a href="#" aria-label="다음">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            <ul class="pagination">
+                <li>
+                    <a href="#" aria-label="이전">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li>
+                    <a href="#" aria-label="다음">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
         </th:block>
     </div>
 </th:block>

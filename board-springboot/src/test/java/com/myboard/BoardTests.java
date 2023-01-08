@@ -17,13 +17,13 @@ class BoardTests {
     @Test
     void test() {
         BoardDTO dto = new BoardDTO();
-        for(int i = 5; i <= 6; i++) {
+        for(int i = 9; i <= 10; i++) {
             dto.setTitle(String.format("[%d]번째 게시글입니다.", i));
             dto.setWriter(String.format("테스트이름[%d]", i));
             dto.setContent(String.format("게시글등록테스트[:%d]", i));
-            dto.setNoticeYN(true);
+            dto.setNoticeYN(false);
             dto.setSecretYN(false);
-            dto.setDeleteYN(true);
+            dto.setDeleteYN(false);
             
             this.boardRepository.save(Board.builder()
                                     .title(dto.getTitle())

@@ -1,19 +1,27 @@
 package com.myboard.service;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.myboard.DataNotFoundException;
+import com.myboard.domain.Board;
 import com.myboard.domain.BoardDTO;
 import com.myboard.mapper.BoardMapper;
+import com.myboard.repository.BoardRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class BoardService {
     
-    @Autowired
-    private BoardMapper boardMapper;
+    private final BoardMapper boardMapper;
+    private final BoardRepository boardRepository;
+    private final ModelMapper modelMapper;
     
     // 게시글 등록 + 게시글 수정
     public boolean registerBoard(BoardDTO params) {
@@ -36,17 +44,12 @@ public class BoardService {
     
     // 게시글 목록 (+ 게시글 총 개수)
     public List<BoardDTO> getBoardList() {
-        List<BoardDTO> boardList = Collections.emptyList();
+        List<Board> boardList = this.boardRepository.findAllByDeleteYN(false);
         
-        // 게시글 총 개수 저장
-        int boardTotalCount = getTotal();
+        List<BoardDTO> result = boardList.stream().map(b -> modelMapper.map(b, BoardDTO.class))
+                .collect(Collectors.toList());
         
-        // 게시글이 있을 경우, 게시글 목록 가져오는 Mapper 실행
-        if(boardTotalCount > 0) {
-            boardList = boardMapper.selectBoardList();
-        }
-        
-        return boardList;
+        return result;
     }
     
     //게시글 총 개수
@@ -56,8 +59,13 @@ public class BoardService {
     
     // 게시글 조회
     public BoardDTO getBoardDetail(Long idx) {
-        
-        return boardMapper.selectBoardDetail(idx);
+        Optional<Board> ob = this.boardRepository.findById(idx);
+        if(ob.isPresent()) {
+            BoardDTO board = modelMapper.map(ob.get(), BoardDTO.class);
+            return board;
+        }else {
+            throw new DataNotFoundException("board not found");
+        }
     }
     
     // 게시글 삭제

@@ -59,5 +59,6 @@ public class Board {
         this.noticeYN = noticeYN;
         this.secretYN = secretYN;
         this.deleteYN = deleteYN;
+        this.insertTime = LocalDateTime.now();
     }
 }
