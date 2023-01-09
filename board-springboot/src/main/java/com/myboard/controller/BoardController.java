@@ -1,8 +1,7 @@
 package com.myboard.controller;
 
-import java.util.List;
-
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,9 +65,33 @@ public class BoardController {
     
     // 게시글 목록
     @GetMapping(value = "/list.do")
-    public String openBoardList(Model model) {
-        List<BoardDTO> boardList = this.boardService.getBoardList();
-        model.addAttribute("boardList", boardList);
+    public String openBoardList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        if(page < 0) { // 0 미만 페이지 오류 처리
+         // TODO : 존재하지 않는 페이지 번호라는 메세지 출력
+            return "redirect:/board/list.do";
+        }
+        Page<BoardDTO> paging = this.boardService.getBoardList(page);
+        int pageSize1 = 4;
+        int pageSize2 = 4;
+        if(page >= paging.getTotalPages()) { // 총 페이지 수를 넘어서는 번호 오류 처리
+            // TODO : 존재하지 않는 페이지 번호라는 메세지 출력
+            return "redirect:/board/list.do";
+        }
+        /**
+         * 현재페이지 < ceil(한줄페이지수/2) or 현재페이지 > 마지막페이지 - ceil(한줄페이지수/2)
+         */
+        // 페이지 칸 처리 
+        if(paging.getNumber() < 5) {
+            pageSize1 = paging.getNumber();
+            pageSize2 = 8-pageSize1;
+        }
+        if(paging.getNumber() > paging.getTotalPages()-5) {
+            pageSize2 = (paging.getTotalPages()-1)-paging.getNumber();
+            pageSize1 = 8-pageSize2;
+        }
+        model.addAttribute("pageSize1", pageSize1);
+        model.addAttribute("pageSize2", pageSize2);
+        model.addAttribute("paging", paging);
         
         return "board/list";
     }

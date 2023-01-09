@@ -1,10 +1,11 @@
 package com.myboard.service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myboard.DataNotFoundException;
@@ -42,12 +43,12 @@ public class BoardService {
         return (queryResult == 1) ? true : false;
     }
     
-    // 게시글 목록 (+ 게시글 총 개수)
-    public List<BoardDTO> getBoardList() {
-        List<Board> boardList = this.boardRepository.findAllByDeleteYN(false);
+    // 게시글 목록 (+ 게시글 총 개수) 페이징
+    public Page<BoardDTO> getBoardList(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Board> boardList = this.boardRepository.findAllByDeleteYN(false, pageable);
         
-        List<BoardDTO> result = boardList.stream().map(b -> modelMapper.map(b, BoardDTO.class))
-                .collect(Collectors.toList());
+        Page<BoardDTO> result = boardList.map(b -> modelMapper.map(b,  BoardDTO.class));
         
         return result;
     }
