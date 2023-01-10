@@ -48,7 +48,7 @@ layout:decorate="~{board/layout/basic}">
         
         <div class="btn_wrap text-center">
             <a th:href="@{/board/list.do}" class="btn btn-default waves-effect waves-light">뒤로가기</a>
-            <a th:href="@{/board/write.do( idx=${board.idx} )}" class="btn btn-primary waves-effect waves-light">수정하기</a>
+            <a th:href="@{/board/modify.do( idx=${board.idx} )}" class="btn btn-primary waves-effect waves-light">수정하기</a>
             <a href="javascript:void(0);" th:data-uri="@{|/board/delete.do?idx=${board.idx}|}"
              class="delete btn btn-danger waves-effect waves-light">삭제하기</a>
         </div>

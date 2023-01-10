@@ -52,13 +52,21 @@ public class Board {
     private List<Comment> commentList;
     
     @Builder
-    public Board(String title, String content, String writer, Boolean noticeYN, Boolean secretYN, Boolean deleteYN) {
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
-        this.noticeYN = noticeYN;
-        this.secretYN = secretYN;
-        this.deleteYN = deleteYN;
-        this.insertTime = LocalDateTime.now();
+    public Board(BoardDTO params) {
+        if(params.getIdx() != null) {
+            this.idx = params.getIdx();
+            this.insertTime = params.getInsertTime();
+            this.updateTime = LocalDateTime.now();
+            this.commentList = params.getCommentList();
+        }else {
+            this.insertTime = LocalDateTime.now();
+        }
+        this.title = params.getTitle();
+        this.content = params.getContent();
+        this.writer = params.getWriter();
+        this.noticeYN = params.getNoticeYN();
+        this.secretYN = params.getSecretYN();
+        this.deleteYN = params.getDeleteYN();
+        
     }
 }

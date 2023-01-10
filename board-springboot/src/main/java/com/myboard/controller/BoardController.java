@@ -4,14 +4,17 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.myboard.domain.BoardDTO;
+import com.myboard.domain.BoardForm;
 import com.myboard.service.BoardService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/board")
@@ -22,43 +25,26 @@ public class BoardController {
     private final BoardService boardService;
     
     // 게시글 등록 GET
-    @GetMapping(value = "/write.do")
-    public String openBoardWrite(@RequestParam(value="idx", required=false) Long idx, Model model) {
-        
-        // idx가 없으면 게시물이 존재하지 않으므로,
-        // 새로운 BoardDTO를 모델에 담아 리턴
-        if(idx == null) {
-            model.addAttribute("board", new BoardDTO());
-        }
-        // idx가 있으면 게시물이 존재하므로,
-        // 게시물을 조회하고 그 정보를 모델에 담아 리턴
-        else {
-            BoardDTO board = boardService.getBoardDetail(idx);
-            
-            // 아무 정보도 조회되지 않았다면, list로 리다이렉트
-            if(board == null) {
-                return "redirect:/board/list.do";
-            }
-            
-            model.addAttribute("board", board);
-        }
+    @GetMapping(value = "/register.do")
+    public String registerBoard(BoardForm boardForm) {
         
         return "board/write";
     }
     
     // 게시글 등록 POST
     @PostMapping(value = "/register.do")
-    public String registerBoard(final BoardDTO params) {
-        try {
-            boolean isRegistered = boardService.registerBoard(params);
-            if (isRegistered == false) {
-                // TODO : 게시글 등록 실패 메세지 전달
-            }
-        } catch(DataAccessException e) {
-            // TODO : 데이터베이스 처리 과정에서 문제가 발생했다는 메세지 전달
-        } catch(Exception e) {
-            // TODO : 시스템에 문제가 발생했다는 메세지 전달
+    public String registerBoard(@Valid BoardForm boardForm, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "board/write";
         }
+        BoardDTO board = new BoardDTO();
+        board.setTitle(boardForm.getTitle());
+        board.setContent(boardForm.getContent());
+        board.setWriter(boardForm.getWriter());
+        board.setNoticeYN(boardForm.getNoticeYN());
+        board.setSecretYN(boardForm.getSecretYN());
+        
+        this.boardService.registerBoard(board);
         
         return "redirect:/board/list.do";
     }
@@ -118,6 +104,35 @@ public class BoardController {
         return "board/view";
     }
     
+    // 게시글 수정 GET
+    @GetMapping(value = "/modify.do")
+    public String modify(BoardForm boardForm, @RequestParam("idx") Long idx) {
+        BoardDTO board = this.boardService.getBoardDetail(idx);
+        
+        boardForm.setTitle(board.getTitle());
+        boardForm.setContent(board.getContent());
+        boardForm.setWriter(board.getWriter());
+        boardForm.setNoticeYN(board.getNoticeYN());
+        boardForm.setSecretYN(board.getSecretYN());
+        return "board/write";
+    }
+    
+    // 게시글 수정 POST
+    @PostMapping(value = "/modify.do")
+    public String modify(@Valid BoardForm boardForm, BindingResult bindingResult, @RequestParam("idx") Long idx) {
+        if(bindingResult.hasErrors()) {
+            return "board/write";
+        }
+        BoardDTO board = this.boardService.getBoardDetail(idx);
+        board.setTitle(boardForm.getTitle());
+        board.setContent(boardForm.getContent());
+        board.setWriter(boardForm.getWriter());
+        board.setNoticeYN(boardForm.getNoticeYN());
+        board.setSecretYN(boardForm.getSecretYN());
+        
+        this.boardService.registerBoard(board);
+        return String.format("redirect:/board/view.do?idx=%s", idx);
+    }
     // 게시글 삭제
     @GetMapping(value = "/delete.do")
     public String deleteBoard(@RequestParam(value="idx", required=false) Long idx) {

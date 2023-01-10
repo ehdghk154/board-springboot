@@ -26,12 +26,7 @@ class BoardTests {
             dto.setDeleteYN(false);
             
             this.boardRepository.save(Board.builder()
-                                    .title(dto.getTitle())
-                                    .content(dto.getContent())
-                                    .writer(dto.getWriter())
-                                    .noticeYN(dto.getNoticeYN())
-                                    .secretYN(dto.getSecretYN())
-                                    .deleteYN(dto.getDeleteYN())
+                                    .params(dto)
                                     .build());
         }
     }
