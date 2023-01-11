@@ -62,21 +62,16 @@ public class BoardService {
     }
     
     // 게시글 삭제
-    public boolean deleteBoard(Long idx) {
-        int queryResult = 0;
+    public void deleteBoard(Long idx) {
         
-        BoardDTO board = boardMapper.selectBoardDetail(idx);
+        Optional<Board> ob = this.boardRepository.findById(idx);
         
-        // 조회한 게시글이 null이 아니고, 삭제된 상태가 아닐 때 실행
-        if(board != null && !board.getDeleteYN()) {
-            queryResult = boardMapper.deleteBoard(idx);
+        //게시글이 존재할 경우
+        if(ob.isPresent()) {
+            BoardDTO board = modelMapper.map(ob.get(), BoardDTO.class);
+            board.setDeleteYN(true);
+            this.boardRepository.save(Board.builder().params(board).build());
         }
         
-        // 1이면 정상적으로 쿼리 실행되었다는 뜻으로 true 반환
-        return(queryResult == 1) ? true : false;
     }
 }
-
-/**
- * 엔티티 추가, h2데이터베이스 추가, 레포지터리(+JPA)추가, 도메인 분류
- */

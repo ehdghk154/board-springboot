@@ -46,7 +46,7 @@ public class BoardController {
         
         this.boardService.registerBoard(board);
         
-        return "redirect:/board/list.do";
+        return "redirect:/";
     }
     
     // 게시글 목록
@@ -54,14 +54,14 @@ public class BoardController {
     public String openBoardList(Model model, @RequestParam(value="page", defaultValue="0") int page) {
         if(page < 0) { // 0 미만 페이지 오류 처리
          // TODO : 존재하지 않는 페이지 번호라는 메세지 출력
-            return "redirect:/board/list.do";
+            return "redirect:/";
         }
         Page<BoardDTO> paging = this.boardService.getBoardList(page);
         int pageSize1 = 4;
         int pageSize2 = 4;
         if(page >= paging.getTotalPages()) { // 총 페이지 수를 넘어서는 번호 오류 처리
             // TODO : 존재하지 않는 페이지 번호라는 메세지 출력
-            return "redirect:/board/list.do";
+            return "redirect:/";
         }
         /**
          * 현재페이지 < ceil(한줄페이지수/2) or 현재페이지 > 마지막페이지 - ceil(한줄페이지수/2)
@@ -88,7 +88,7 @@ public class BoardController {
         // 올바르지 않은 접근
         if(idx == null) {
             System.out.println("실패");
-            return "redirect:/board/list.do";
+            return "redirect:/";
         }
         
         BoardDTO board = boardService.getBoardDetail(idx);
@@ -135,30 +135,24 @@ public class BoardController {
     }
     // 게시글 삭제
     @GetMapping(value = "/delete.do")
-    public String deleteBoard(@RequestParam(value="idx", required=false) Long idx) {
-        System.out.println("/board/delete.do 접근. idx = " + idx);
+    public String deleteBoard(@RequestParam("idx") Long idx) {
+        //System.out.println("/board/delete.do 접근. idx = " + idx);
         
-        //올바르지 않은 접글일 경우
+        //올바르지 않은 접근일 경우
         if(idx == null) {
             // TODO : 올바르지 않은 접근이라는 메세지 전달
-            return "redirect:/board/list.do";
+            return "redirect:/";
         }
         
         try {
-            System.out.println("try 접근. idx = " + idx);
-            boolean isDeleted = boardService.deleteBoard(idx);
-            System.out.println("deleteBoard 실행 후. isDeleted = " + isDeleted);
-            
-            // false일 경우 이미 게시글이 삭제된 상태
-            if(isDeleted == false) {
-                // TODO : 게시글 삭제에 실패했다는 메세지 전달
-            }
+            //System.out.println("try 접근. idx = " + idx);
+            this.boardService.deleteBoard(idx);
         } catch(DataAccessException e) {
             // TODO : 데이터베이스 처리 과정에 문제 발생 메세지 전달
         } catch(Exception e) {
             // TODO : 시스템에 문제가 발생했다는 메세지 전달
         }
         
-        return "redirect:/board/list.do";
+        return "redirect:/";
     }
 }
