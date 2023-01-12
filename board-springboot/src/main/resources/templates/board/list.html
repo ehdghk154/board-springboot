@@ -34,8 +34,8 @@
             <!-- 게시글 목록이 출력되는 영역 -->
             <!-- th:if : 일반 if문과 같음 -->
             <!-- th:unless : else문. if문의 내용을 똑같이 적어줘야 함. -->
-            <tbody>
-                <tr th:if="${not #lists.isEmpty( paging )}" th:each="row : ${paging}">
+            <tbody th:if="${not #lists.isEmpty( paging )}" th:each="row : ${paging}">
+                <tr th:classappend="${row.noticeYN} ? text-bold">
                     <!-- #strings.equals 함수로 공지여부가 'Y'라면 "공지" 출력, 아니라면 게시물 번호 출력-->
                     <td scope="row" th:text="${row.noticeYN ? '공지' : row.idx}"></td>
                     <td class="text-left">

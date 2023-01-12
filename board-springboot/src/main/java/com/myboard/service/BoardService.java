@@ -1,11 +1,14 @@
 package com.myboard.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.myboard.DataNotFoundException;
@@ -37,7 +40,13 @@ public class BoardService {
     
     // 게시글 목록 (+ 게시글 총 개수) 페이징
     public Page<BoardDTO> getBoardList(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        //게시글 공지 여부 및 등록일 기준으로 정렬
+        //html에서 공지글 게시글 따로 추가되도록해서 항상 상단 고정하게 바꿀 예정
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("noticeYN"));
+        sorts.add(Sort.Order.desc("insertTime"));
+        //페이징 ( 한 페이지 당 10개 게시글)
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         Page<Board> boardList = this.boardRepository.findAllByDeleteYN(false, pageable);
         
         Page<BoardDTO> result = boardList.map(b -> modelMapper.map(b,  BoardDTO.class));
