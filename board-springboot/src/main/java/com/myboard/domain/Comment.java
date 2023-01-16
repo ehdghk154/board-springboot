@@ -9,9 +9,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Comment {
     @Id
@@ -33,4 +37,20 @@ public class Comment {
     
     @ManyToOne
     private Board board;
+    
+    @Builder
+    public Comment(CommentDTO params) {
+        if(params.getIdx() != null) {
+            this.idx = params.getIdx();
+            this.insertTime = params.getInsertTime();
+            this.updateTime = LocalDateTime.now();
+        }else {
+            this.insertTime = LocalDateTime.now();
+        }
+        this.board = params.getBoard();
+        this.content = params.getContent();
+        this.secretYN = params.getSecretYN();
+        this.deleteYN = params.getDeleteYN();
+        
+    }
 }

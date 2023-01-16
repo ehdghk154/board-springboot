@@ -1321,7 +1321,7 @@ Version 1.0
   box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.12) !important;
 }
 textarea.form-control {
-  height: 105px;
+  height: 45px;
 }
 .has-success .form-control {
   border-color: #00bf4f;

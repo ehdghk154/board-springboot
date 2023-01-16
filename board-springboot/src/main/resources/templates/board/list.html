@@ -44,6 +44,10 @@
                         <!-- 일반적인 GET : /board/view.do?idx=${idx}&page=${page}-->
                         <!-- 타임리프 GET : /board/view.do(idx=${idx}, page=${page})-->
                         <a th:href="@{/board/view.do( idx=${row.idx} )}" th:text="${row.title}"></a>
+                        <span class="text-danger small ms-2"
+                            th:if="${#lists.size(row.commentList) > 0}"
+                            th:text="${#lists.size(row.commentList)}">
+                        </span>
                     </td>
                     <td th:text="${row.writer}"></td>
                     <!-- #temporals.format : 원하는 날짜 형태로 포맷할 수 있다. -->
