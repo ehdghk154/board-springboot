@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.myboard.domain.BoardDTO;
 import com.myboard.domain.BoardForm;
+import com.myboard.domain.CommentForm;
 import com.myboard.service.BoardService;
 
 import jakarta.validation.Valid;
@@ -87,7 +88,7 @@ public class BoardController {
     
     // 게시글 조회
     @GetMapping(value = "/view.do")
-    public String openBoardDetail(@RequestParam("idx") Long idx, Model model) {
+    public String openBoardDetail(@RequestParam("idx") Long idx, Model model, CommentForm commentForm) {
         // 올바르지 않은 접근
         if(idx == null) {
             System.out.println("실패");

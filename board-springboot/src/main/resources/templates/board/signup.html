@@ -1,0 +1,37 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{board/layout/basic}">
+
+<!-- title -->
+<th:block layout:fragment="title">
+    <title>this is sign up page</title>
+</th:block>
+
+<!-- content -->
+<th:block layout:fragment="content">
+    <div class="my-3 border-bottom">
+        <div>
+            <h4>회원가입</h4>
+        </div>
+    </div>
+    <form th:action="@{/user/signup.do}" th:object="${signUpForm}" method="post">
+        <div th:replace="~{board/layout/form_error :: formErrorsFragment}"></div>
+        <div class="mb-3">
+            <label for="username" class="form-label">사용자ID</label>
+            <input type="text" th:field="*{username}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password1" class="form-label">비밀번호</label>
+            <input type="password" th:field="*{password1}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">비밀번호 확인</label>
+            <input type="password" th:field="*{password2}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" th:field="*{email}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">회원가입</button>
+    </form>
+</th:block>
+</html>

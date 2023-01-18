@@ -65,9 +65,10 @@ layout:decorate="~{board/layout/basic}">
                 <!-- /.box-title -->
             </div>
             
-            <form class="form-horizontal form-view" th:action="@{/comment/write.do( idx=${board.idx} ) }" method="post">
+            <form class="form-horizontal form-view" th:action="@{/comment/write.do( idx=${board.idx} ) }" th:object="${commentForm}" method="post">
+                <div th:replace="~{board/layout/form_error :: formErrorsFragment}"></div>
                 <div class="input-group margin-bottom-20">
-                    <textarea name="content" id="content" class="form-control" rows="1" placeholder="Comment..."></textarea>
+                    <textarea th:field="*{content}" class="form-control" rows="1" placeholder="Comment..."></textarea>
                     <div class="input-group-btn">
                         <button type="submit" class="btn waves-effect waves-light">
                             <i class="fa fa-commenting" aria-hidden="true"></i>
