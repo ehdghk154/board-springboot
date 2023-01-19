@@ -14,7 +14,7 @@ layout:decorate="~{board/layout/basic}">
         </div>
     </div>
     <form th:action="@{/user/signup.do}" th:object="${signUpForm}" method="post">
-        <div th:replace="~{board/layout/form_error :: formErrorsFragment}"></div>
+        <div th:replace="~{board/fragments/form_error :: formErrorsFragment}"></div>
         <div class="mb-3">
             <label for="username" class="form-label">사용자ID</label>
             <input type="text" th:field="*{username}" class="form-control">

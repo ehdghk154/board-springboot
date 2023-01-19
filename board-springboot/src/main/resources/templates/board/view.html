@@ -66,7 +66,7 @@ layout:decorate="~{board/layout/basic}">
             </div>
             
             <form class="form-horizontal form-view" th:action="@{/comment/write.do( idx=${board.idx} ) }" th:object="${commentForm}" method="post">
-                <div th:replace="~{board/layout/form_error :: formErrorsFragment}"></div>
+                <div th:replace="~{board/fragments/form_error :: formErrorsFragment}"></div>
                 <div class="input-group margin-bottom-20">
                     <textarea th:field="*{content}" class="form-control" rows="1" placeholder="Comment..."></textarea>
                     <div class="input-group-btn">
