@@ -49,7 +49,7 @@
                             th:text="${#lists.size(row.commentList)}">
                         </span>
                     </td>
-                    <td th:text="${row.writer}"></td>
+                    <td><span th:if="${row.author != null}" th:text="${row.author.username}"></span></td>
                     <!-- #temporals.format : 원하는 날짜 형태로 포맷할 수 있다. -->
                     <td th:text="${#temporals.format( row.insertTime, 'yyyy-MM-dd' )}"></td>
                     <td th:text="${row.viewCnt}"></td>

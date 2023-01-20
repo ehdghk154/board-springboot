@@ -19,7 +19,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             + "where "
             + "   (b.title like %:kw% "
             + "   or b.content like %:kw% "
-            + "   or b.writer like %:kw% "
+            + "   or b.author.username like %:kw% "
             + "   or c.content like %:kw%) "
             + "   and b.deleteYN = 'N'")
     Page<Board> findAllByKeyword(@Param("kw") String kw, Pageable pageable);

@@ -17,4 +17,5 @@ public class CommentDTO {
     private LocalDateTime updateTime; // 수정일
     private LocalDateTime deleteTime; // 삭제일
     private Board board;
+    private BoardUser author;
 }

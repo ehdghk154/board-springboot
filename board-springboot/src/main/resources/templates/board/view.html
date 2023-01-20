@@ -20,7 +20,7 @@ layout:decorate="~{board/layout/basic}">
             <div class="form-group">
                 <label for="inp-type-2" class="col-sm-2 control-label">이름</label>
                 <div class="col-sm-10">
-                    <p class="form-control" th:text="*{writer}"></p>
+                    <p th:if="*{author != null}" th:text="*{author.username}" class="form-control"></p>
                 </div>
             </div>
             
@@ -48,14 +48,19 @@ layout:decorate="~{board/layout/basic}">
         
         <div class="btn_wrap text-center">
             <a th:href="@{/board/list.do}" class="btn btn-default waves-effect waves-light">뒤로가기</a>
-            <a th:href="@{/board/modify.do( idx=${board.idx} )}" class="btn btn-primary waves-effect waves-light">수정하기</a>
+            <a th:href="@{/board/modify.do( idx=${board.idx} )}" 
+               sec:authorize="isAuthenticated()"
+               th:if="${board.author != null and #authentication.getPrincipal().getUsername() == board.author.username}"
+               class="btn btn-primary waves-effect waves-light">수정하기</a>
             <a href="javascript:void(0);" th:data-uri="@{|/board/delete.do?idx=${board.idx}|}"
-             class="delete btn btn-danger waves-effect waves-light">삭제하기</a>
+               class="delete btn btn-danger waves-effect waves-light" sec:authorize="isAuthenticated()"
+               th:if="${board.author != null and #authentication.getPrincipal().getUsername() == board.author.username}">삭제하기</a>
         </div>
     </div>
     <!-- /.card-content -->
 </th:block>
 
+<!-- 댓글 -->
 <th:block layout:fragment="add-content">
     <div class="box-content">
         <div class="card-content card-center">
@@ -68,7 +73,9 @@ layout:decorate="~{board/layout/basic}">
             <form class="form-horizontal form-view" th:action="@{/comment/write.do( idx=${board.idx} ) }" th:object="${commentForm}" method="post">
                 <div th:replace="~{board/fragments/form_error :: formErrorsFragment}"></div>
                 <div class="input-group margin-bottom-20">
-                    <textarea th:field="*{content}" class="form-control" rows="1" placeholder="Comment..."></textarea>
+                    <!-- 로그아웃 상태일 경우 disabled -->
+                    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control" rows="1" placeholder="Comment..."></textarea>
+                    <textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control" rows="1" placeholder="Comment..."></textarea>
                     <div class="input-group-btn">
                         <button type="submit" class="btn waves-effect waves-light">
                             <i class="fa fa-commenting" aria-hidden="true"></i>
@@ -80,7 +87,7 @@ layout:decorate="~{board/layout/basic}">
             
             <ul class="notice-list" th:each="comment : ${board.commentList}">
                 <li>
-                    <span class="name" th:text="임시"></span>
+                    <span th:if="${comment.author != null}" class="name" th:text="${comment.author.username}"></span>
                     <span class="desc" th:text="${comment.content}"></span>
                     <span class="time" th:text="${#temporals.format( comment.insertTime, 'yyyy-MM-dd' )}"></span>
                     <button type="button" class="btn btn-xs btn-circle">

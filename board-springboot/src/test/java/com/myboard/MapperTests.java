@@ -18,7 +18,6 @@ public class MapperTests {
         BoardDTO params = new BoardDTO();
         params.setTitle("게시글 제목 테스트1");
         params.setContent("게시글 내용 테스트1");
-        params.setWriter("테스트작성자1");
         
         int result = boardMapper.insertBoard(params);
         System.out.println("결과는 " + result + "입니다.");

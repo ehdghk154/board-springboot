@@ -1,7 +1,11 @@
 package com.myboard.controller;
 
+import java.security.Principal;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,11 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.myboard.domain.BoardDTO;
 import com.myboard.domain.BoardForm;
+import com.myboard.domain.BoardUserDTO;
 import com.myboard.domain.CommentForm;
 import com.myboard.service.BoardService;
+import com.myboard.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +31,10 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
     
     private final BoardService boardService;
+    private final UserService userService;
     
     // 게시글 등록 GET
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/register.do")
     public String registerBoard(BoardForm boardForm) {
         
@@ -33,19 +42,23 @@ public class BoardController {
     }
     
     // 게시글 등록 POST
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/register.do")
-    public String registerBoard(@Valid BoardForm boardForm, BindingResult bindingResult) {
+    public String registerBoard(@Valid BoardForm boardForm, 
+            BindingResult bindingResult, Principal principal) {
         if(bindingResult.hasErrors()) {
             return "board/write";
         }
-        BoardDTO board = new BoardDTO();
-        board.setTitle(boardForm.getTitle());
-        board.setContent(boardForm.getContent());
-        board.setWriter(boardForm.getWriter());
-        board.setNoticeYN(boardForm.getNoticeYN());
-        board.setSecretYN(boardForm.getSecretYN());
+        BoardDTO boardDTO = new BoardDTO();
+        BoardUserDTO userDTO = this.userService.getUser(principal.getName());
         
-        this.boardService.registerBoard(board);
+        boardDTO.setTitle(boardForm.getTitle());
+        boardDTO.setContent(boardForm.getContent());
+        boardDTO.setNoticeYN(boardForm.getNoticeYN());
+        boardDTO.setSecretYN(boardForm.getSecretYN());
+        
+        
+        this.boardService.registerBoard(boardDTO, userDTO);
         
         return "redirect:/";
     }
@@ -109,35 +122,44 @@ public class BoardController {
     }
     
     // 게시글 수정 GET
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/modify.do")
-    public String modify(BoardForm boardForm, @RequestParam("idx") Long idx) {
+    public String modify(BoardForm boardForm, @RequestParam("idx") Long idx, Principal principal) {
         BoardDTO board = this.boardService.getBoardDetail(idx);
+        if(!board.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+        }
         
         boardForm.setTitle(board.getTitle());
         boardForm.setContent(board.getContent());
-        boardForm.setWriter(board.getWriter());
         boardForm.setNoticeYN(board.getNoticeYN());
         boardForm.setSecretYN(board.getSecretYN());
         return "board/write";
     }
     
     // 게시글 수정 POST
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/modify.do")
-    public String modify(@Valid BoardForm boardForm, BindingResult bindingResult, @RequestParam("idx") Long idx) {
+    public String modify(@Valid BoardForm boardForm, BindingResult bindingResult, 
+            @RequestParam("idx") Long idx, Principal principal) {
         if(bindingResult.hasErrors()) {
             return "board/write";
         }
-        BoardDTO board = this.boardService.getBoardDetail(idx);
-        board.setTitle(boardForm.getTitle());
-        board.setContent(boardForm.getContent());
-        board.setWriter(boardForm.getWriter());
-        board.setNoticeYN(boardForm.getNoticeYN());
-        board.setSecretYN(boardForm.getSecretYN());
+        BoardDTO boardDTO = this.boardService.getBoardDetail(idx);
+        BoardUserDTO userDTO = this.userService.getUser(principal.getName());
+        if(!boardDTO.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+        }
+        boardDTO.setTitle(boardForm.getTitle());
+        boardDTO.setContent(boardForm.getContent());
+        boardDTO.setNoticeYN(boardForm.getNoticeYN());
+        boardDTO.setSecretYN(boardForm.getSecretYN());
         
-        this.boardService.registerBoard(board);
+        this.boardService.registerBoard(boardDTO, userDTO);
         return String.format("redirect:/board/view.do?idx=%s", idx);
     }
     // 게시글 삭제
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/delete.do")
     public String deleteBoard(@RequestParam("idx") Long idx) {
         //System.out.println("/board/delete.do 접근. idx = " + idx);

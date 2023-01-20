@@ -19,7 +19,6 @@ class BoardTests {
         BoardDTO dto = new BoardDTO();
         for(int i = 11; i <= 300; i++) {
             dto.setTitle(String.format("[%d]번째 게시글입니다.", i));
-            dto.setWriter(String.format("테스트이름[%d]", i));
             dto.setContent(String.format("게시글등록테스트[:%d]", i));
             dto.setNoticeYN(false);
             dto.setSecretYN(false);

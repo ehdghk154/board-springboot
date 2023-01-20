@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,9 +31,6 @@ public class Board {
     @Column(columnDefinition = "TEXT")
     private String content;     // 내용
     
-    @Column(length = 10)
-    private String writer;      // 작성자
-    
     private int viewCnt;        // 조회수
     
     @Convert(converter = BooleanToYNConverter.class)
@@ -51,6 +49,9 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList;
     
+    @ManyToOne
+    private BoardUser author;
+    
     @Builder
     public Board(BoardDTO params) {
         if(params.getIdx() != null) {
@@ -63,10 +64,10 @@ public class Board {
         }
         this.title = params.getTitle();
         this.content = params.getContent();
-        this.writer = params.getWriter();
         this.noticeYN = params.getNoticeYN();
         this.secretYN = params.getSecretYN();
         this.deleteYN = params.getDeleteYN();
+        this.author = params.getAuthor();
         
     }
 }

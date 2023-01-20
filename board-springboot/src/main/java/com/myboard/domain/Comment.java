@@ -38,6 +38,9 @@ public class Comment {
     @ManyToOne
     private Board board;
     
+    @ManyToOne
+    private BoardUser author;
+    
     @Builder
     public Comment(CommentDTO params) {
         if(params.getIdx() != null) {
@@ -51,6 +54,7 @@ public class Comment {
         this.content = params.getContent();
         this.secretYN = params.getSecretYN();
         this.deleteYN = params.getDeleteYN();
+        this.author = params.getAuthor();
         
     }
 }

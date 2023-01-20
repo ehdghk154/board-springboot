@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.myboard.DataNotFoundException;
 import com.myboard.domain.Board;
 import com.myboard.domain.BoardDTO;
+import com.myboard.domain.BoardUser;
+import com.myboard.domain.BoardUserDTO;
 //import com.myboard.domain.Comment;
 import com.myboard.mapper.BoardMapper;
 import com.myboard.repository.BoardRepository;
@@ -52,13 +54,14 @@ public class BoardService {
 //    }
     
     // 게시글 등록 + 게시글 수정
-    public void registerBoard(BoardDTO params) {
+    public void registerBoard(BoardDTO boardDTO, BoardUserDTO userDTO) {
         
         /**
          * idx가 없으면, 게시글 등록
          * idx가 있으면, 게시글 수정
          */
-        this.boardRepository.save(Board.builder().params(params).build());
+        boardDTO.setAuthor(BoardUser.builder().params(userDTO).build());
+        this.boardRepository.save(Board.builder().params(boardDTO).build());
     }
 
     // 게시글 목록 (+ 게시글 총 개수) 페이징
