@@ -68,6 +68,7 @@ public class Board {
         this.secretYN = params.getSecretYN();
         this.deleteYN = params.getDeleteYN();
         this.author = params.getAuthor();
+        this.viewCnt = params.getViewCnt();
         
     }
 }

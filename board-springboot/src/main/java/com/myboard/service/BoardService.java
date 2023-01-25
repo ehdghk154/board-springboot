@@ -97,6 +97,12 @@ public class BoardService {
         }
     }
     
+    // 조회수
+    public void viewCount(BoardDTO boardDTO) {
+        boardDTO.setViewCnt(boardDTO.getViewCnt()+1);
+        this.boardRepository.save(Board.builder().params(boardDTO).build());
+    }
+    
     // 게시글 삭제
     public void deleteBoard(Long idx) {
         

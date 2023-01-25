@@ -108,15 +108,17 @@ public class BoardController {
             return "redirect:/";
         }
         
-        BoardDTO board = boardService.getBoardDetail(idx);
+        BoardDTO boardDTO = boardService.getBoardDetail(idx);
         
         // 없는 게시글이거나 삭제된 게시글일 경우
-        if(board == null || board.getDeleteYN()) {
+        if(boardDTO == null || boardDTO.getDeleteYN()) {
             // TODO : 존재하지 않거나 삭제된 게시글이라는 메시지 전달
             return "redirect:/board/list.do";
         }
         
-        model.addAttribute("board", board);
+        boardService.viewCount(boardDTO);
+        
+        model.addAttribute("board", boardDTO);
         
         return "board/view";
     }
