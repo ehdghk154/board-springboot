@@ -43,11 +43,33 @@
                         <!-- 일반적인 GET과 타임리프 GET 차이 -->
                         <!-- 일반적인 GET : /board/view.do?idx=${idx}&page=${page}-->
                         <!-- 타임리프 GET : /board/view.do(idx=${idx}, page=${page})-->
-                        <a th:href="@{/board/view.do( idx=${row.idx} )}" th:text="${row.title}"></a>
-                        <span class="text-danger small ms-2"
-                            th:if="${#lists.size(row.commentList) > 0}"
-                            th:text="${#lists.size(row.commentList)}">
-                        </span>
+                        <!-- 비밀글 설정 -->
+                        <th:block th:if="${row.secretYN}">
+                            <!-- 로그인을 했고 비밀글을 쓴 본인일 경우 -->
+                            <a th:href="@{/board/view.do( idx=${row.idx} )}" 
+                               sec:authorize="isAuthenticated()"
+                               th:if="${row.author != null and #authentication.getPrincipal().getUsername() == row.author.username}"
+                               th:text="${row.title}"></a>
+                            <span class="text-danger small ms-2"
+                                  th:if="${#lists.size(row.commentList) > 0}"
+                                  th:text="${#lists.size(row.commentList)}">
+                            </span>
+                            <!-- 로그인을 했지만 본인이 아닐 경우 -->
+                            <span sec:authorize="isAuthenticated()"
+                                  th:unless="${row.author != null and #authentication.getPrincipal().getUsername() == row.author.username}">
+                                  &#128274;비밀글입니다.</span>
+                            <!-- 로그인을 하지 않았을 경우 -->
+                            <span sec:authorize="isAnonymous()"> &#128274;비밀글입니다.</span>
+                        </th:block>
+                        <!-- 비밀글 설정X -->
+                        <th:block th:unless="${row.secretYN}">
+                            <a th:href="@{/board/view.do( idx=${row.idx} )}" 
+                               th:text="${row.title}"></a>
+                            <span class="text-danger small ms-2"
+                                th:if="${#lists.size(row.commentList) > 0}"
+                                th:text="${#lists.size(row.commentList)}">
+                            </span>
+                        </th:block>
                     </td>
                     <td><span th:if="${row.author != null}" th:text="${row.author.username}"></span></td>
                     <!-- #temporals.format : 원하는 날짜 형태로 포맷할 수 있다. -->

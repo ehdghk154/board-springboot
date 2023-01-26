@@ -66,7 +66,7 @@ public class BoardController {
     // 게시글 목록
     @GetMapping(value = "/list.do")
     public String openBoardList(Model model, @RequestParam(value="page", defaultValue="0") int page, 
-            @RequestParam(value="kw", defaultValue="") String kw) {
+            @RequestParam(value="kw", defaultValue="") String kw, Principal principal) {
         if(page < 0) { // 0 미만 페이지 오류 처리
          // TODO : 존재하지 않는 페이지 번호라는 메세지 출력
             return "redirect:/";
